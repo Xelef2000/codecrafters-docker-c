@@ -2,6 +2,7 @@
 #include <sys/wait.h>
 #include <unistd.h>
 #include <string.h>
+#include <stdlib.h>
 
 #define BUFFER_SIZE 4096
 #define READ_DESCRIPTOR 0
@@ -47,23 +48,9 @@ int main(int argc, char *argv[]) {
 		close(pipe_std_out[WRITE_DESCRIPTOR]);
 		close(pipe_std_err[WRITE_DESCRIPTOR]);
 
-		// char buffer_out[BUFFER_SIZE];
-		// char buffer_err[BUFFER_SIZE];
 
-		// memset(buffer_out, 0, sizeof(buffer_out));
-		// memset(buffer_err, 0, sizeof(buffer_err));
-
-		// int out_size = read(pipe_std_out[READ_DESCRIPTOR], buffer_out, sizeof(buffer_out));
-		// int err_size = read(pipe_std_err[READ_DESCRIPTOR], buffer_err, sizeof(buffer_err));
-
-		// buffer_out[out_size] = '\0';
-		// buffer_err[err_size] = '\0';
-
-		// write(STDOUT_FILENO, buffer_out, out_size);
-		// write(STDERR_FILENO, buffer_err, err_size);
 
 		char buffer[BUFFER_SIZE];
-		// memset(buffer, 0, sizeof(buffer));
 		
 
 		int n_bytes;
@@ -72,12 +59,14 @@ int main(int argc, char *argv[]) {
 			write(STDOUT_FILENO, buffer, n_bytes);
 		}
 		
-
 		while ((n_bytes = read(pipe_std_err[0], buffer, sizeof(buffer))) > 0) {
 			write(STDERR_FILENO, buffer, n_bytes);
 		}
 
-		wait(NULL);
+		int child_status, exit_status;
+		waitpid(child_pid, &child_status, 0);
+		exit_status = WEXITSTATUS(child_status);
+		exit(exit_status);
 
 	}
 
