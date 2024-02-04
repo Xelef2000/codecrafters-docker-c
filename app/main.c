@@ -50,7 +50,7 @@ int child_process(void *clone_arg){
 	// close un needed ends
 	close(pipe_std_out[READ_DESCRIPTOR]);
 	close(pipe_std_err[READ_DESCRIPTOR]);
-	// execv(basename(command), cmd_args);
+	// execv(basename(command), cmd_args); // we no longer copy the binary, since it should be in the container file 
 	execv(command, cmd_args);
 }
 
