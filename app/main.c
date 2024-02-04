@@ -1,5 +1,4 @@
 #define _GNU_SOURCE
-
 #include <stdio.h>
 #include <sys/wait.h>
 #include <unistd.h>
@@ -8,7 +7,12 @@
 #include <libgen.h>
 #include <sys/stat.h>
 #include "file_operations.h"
+#include <dirent.h> 
 #include <sched.h>
+#include <curl/curl.h>
+#include "network.h"
+
+
 
 #define BUFFER_SIZE 4096
 #define READ_DESCRIPTOR 0
@@ -17,9 +21,11 @@
 struct child_args {
   char *command;
   char *const *cmd_args;
+  char* img;
   const int *stdout_pipe;
   const int *stderr_pipe;
 };
+
 
 
 
@@ -32,7 +38,7 @@ int child_process(void *clone_arg){
 
 	
 
-	if (prepare_working_dir(command) == EXIT_FAILURE) {
+	if (prepare_working_dir(command, clone_args->img) == EXIT_FAILURE) {
 		perror("Error creating and changing docker directory!\n");
 		return EXIT_FAILURE;
 	}
@@ -44,7 +50,8 @@ int child_process(void *clone_arg){
 	// close un needed ends
 	close(pipe_std_out[READ_DESCRIPTOR]);
 	close(pipe_std_err[READ_DESCRIPTOR]);
-	execv(basename(command), cmd_args);
+	// execv(basename(command), cmd_args);
+	execv(command, cmd_args);
 }
 
 
@@ -73,6 +80,7 @@ int main(int argc, char *argv[]) {
 	ca.cmd_args = &argv[3];
 	ca.stdout_pipe = pipe_std_out;
 	ca.stderr_pipe = pipe_std_err;
+	ca.img = argv[2];
 	
 	int child_pid = clone(child_process, pchild_stack+(1024 * 1024), CLONE_NEWPID, (void *)&ca);
 	

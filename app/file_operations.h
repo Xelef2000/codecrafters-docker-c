@@ -4,7 +4,9 @@
 int copy_file(char* src, char* dest);
 int copy_bin(char* command, char* dest);
 int file_exist(char *filename);
-int prepare_working_dir(char* command);
+int prepare_working_dir(char* command, char* img);
+int untar(char *file);
+int makedir(char *dir);
 
 
 #endif

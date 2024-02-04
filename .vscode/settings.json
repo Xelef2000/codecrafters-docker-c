@@ -2,6 +2,22 @@
     "files.associations": {
         "stat.h": "c",
         "sched.h": "c",
-        "file_operations.h": "c"
+        "file_operations.h": "c",
+        "network.h": "c",
+        "array": "c",
+        "string_view": "c",
+        "initializer_list": "c",
+        "curl.h": "c",
+        "docker-registry.h": "c",
+        "functional": "c",
+        "stdio.h": "c",
+        "libgen.h": "c",
+        "stdlib.h": "c",
+        "typeinfo": "c",
+        "optional": "c",
+        "system_error": "c",
+        "tuple": "c",
+        "type_traits": "c",
+        "utility": "c"
     }
 }
